@@ -11,7 +11,9 @@ rapport clair au client à distance.
 ## Le site
 
 Site léger, mobile d'abord, aucune ressource externe
-(polices système, illustrations SVG intégrées), pensé pour la
+(polices système, photos réelles intégrées au document
+en data URI — le connecteur GitHub ne pousse que du texte UTF-8,
+donc pas de fichiers binaires dans le dépôt), pensé pour la
 Guinée. Deux petites fonctions serverless Vercel enregistrent les
 demandes et les listent sur une page privée.
 
@@ -22,8 +24,10 @@ demandes et les listent sur une page privée.
   chaque section a son propre fond dessiné (dégradés, motifs, halos),
   jamais de texte sur fond uni
 - `app.js` — interactions : rapport (onglets, jalons
-  cliquables), cartes « Pourquoi Seedee ? », comparaison
-  Sans / Avec Seedee, révélation au défilement, estimation en direct
+  cliquables), visionneuse photo (toucher une photo pour
+  l'agrandir, flèches pour naviguer), cartes
+  « Pourquoi Seedee ? », comparaison Sans / Avec Seedee,
+  révélation au défilement, estimation en direct
   du formulaire, envoi du brief WhatsApp (la demande est aussi
   enregistrée pour la page privée)
 - `demandes.html` — page privée (non liée dans la navigation) :

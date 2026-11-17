@@ -36,11 +36,27 @@
   var reportTerrain = document.getElementById("report-terrain");
   var reportChantier = document.getElementById("report-chantier");
   var budgetFill = document.getElementById("budget-fill");
+  var budgetPct = document.getElementById("budget-pct");
 
   function animateBudget() {
     if (!budgetFill) return;
     budgetFill.style.width = "0%";
     setTimeout(function () { budgetFill.style.width = "41%"; }, 120);
+    if (!budgetPct) return;
+    var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion || !window.requestAnimationFrame) {
+      budgetPct.textContent = "41";
+      return;
+    }
+    var start = null;
+    var duration = 900;
+    function step(timestamp) {
+      if (start === null) start = timestamp;
+      var progress = Math.min((timestamp - start) / duration, 1);
+      budgetPct.textContent = String(Math.round(41 * progress));
+      if (progress < 1) window.requestAnimationFrame(step);
+    }
+    window.requestAnimationFrame(step);
   }
 
   tabs.forEach(function (tab) {
@@ -155,6 +171,77 @@
       if (panelSans) panelSans.classList.toggle("hidden", showAvec);
       if (panelAvec) panelAvec.classList.toggle("hidden", !showAvec);
     });
+  });
+
+  /* ---------- Visionneuse photo (lightbox) ---------- */
+  var lightbox = document.getElementById("lightbox");
+  var lightboxImg = document.getElementById("lightbox-img");
+  var lightboxCaption = document.getElementById("lightbox-caption");
+  var lightboxPhotos = [];
+  var lightboxIndex = 0;
+
+  function showLightboxPhoto(index) {
+    if (!lightboxPhotos.length) return;
+    lightboxIndex = (index + lightboxPhotos.length) % lightboxPhotos.length;
+    var photo = lightboxPhotos[lightboxIndex];
+    lightboxImg.src = photo.src;
+    lightboxImg.alt = photo.alt;
+    lightboxCaption.textContent = photo.caption;
+  }
+
+  function openLightbox(index) {
+    if (!lightbox) return;
+    showLightboxPhoto(index);
+    lightbox.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeLightbox() {
+    if (!lightbox) return;
+    lightbox.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+
+  document.querySelectorAll("[data-lightbox]").forEach(function (frame) {
+    var img = frame.querySelector("img");
+    if (!img) return;
+    var idx = lightboxPhotos.length;
+    lightboxPhotos.push({
+      src: img.src,
+      alt: img.alt,
+      caption: frame.getAttribute("data-caption") || img.alt
+    });
+    frame.addEventListener("click", function () { openLightbox(idx); });
+    frame.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        openLightbox(idx);
+      }
+    });
+  });
+
+  var lightboxClose = document.getElementById("lightbox-close");
+  if (lightboxClose) lightboxClose.addEventListener("click", closeLightbox);
+  var lightboxPrev = document.getElementById("lightbox-prev");
+  if (lightboxPrev) lightboxPrev.addEventListener("click", function (e) {
+    e.stopPropagation();
+    showLightboxPhoto(lightboxIndex - 1);
+  });
+  var lightboxNext = document.getElementById("lightbox-next");
+  if (lightboxNext) lightboxNext.addEventListener("click", function (e) {
+    e.stopPropagation();
+    showLightboxPhoto(lightboxIndex + 1);
+  });
+  if (lightbox) {
+    lightbox.addEventListener("click", function (e) {
+      if (e.target === lightbox) closeLightbox();
+    });
+  }
+  document.addEventListener("keydown", function (e) {
+    if (!lightbox || !lightbox.classList.contains("open")) return;
+    if (e.key === "Escape") closeLightbox();
+    else if (e.key === "ArrowLeft") showLightboxPhoto(lightboxIndex - 1);
+    else if (e.key === "ArrowRight") showLightboxPhoto(lightboxIndex + 1);
   });
 
   /* ---------- Formulaire : estimation en direct ---------- */

@@ -1,6 +1,6 @@
 /* Seedee — Vérification immobilière Conakry.
    Site léger, mobile d'abord. Aucune ressource externe :
-   polices système, illustrations SVG intégrées.
+   polices système, photos réelles intégrées au document.
    Palette : bleu nuit / indigo + corail vif + turquoise,
    sur fonds sable. Chaque section a son propre fond dessiné :
    aucune page ne ressemble à un document.
@@ -152,7 +152,7 @@ p { margin: 0 0 14px; }
   transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 .btn:hover, .btn:focus-visible { background: var(--navy); transform: translateY(-2px); box-shadow: 0 10px 22px rgba(59, 76, 192, 0.4); }
-.btn:active { transform: translateY(0); }
+.btn:active { transform: translateY(0) scale(0.98); }
 .btn-small { padding: 9px 16px; font-size: 0.9rem; }
 .btn-coral { background: linear-gradient(135deg, var(--coral), #ff8a7a); box-shadow: 0 6px 16px rgba(255, 93, 93, 0.4); }
 .btn-coral:hover, .btn-coral:focus-visible { background: linear-gradient(135deg, var(--coral-dark), var(--coral)); }
@@ -311,8 +311,8 @@ p { margin: 0 0 14px; }
 .mini-check li:last-child { border-bottom: 0; }
 .mini-check .ok { color: var(--turq); font-weight: 800; margin-right: 6px; }
 .mini-check .warn { color: #b25a00; font-weight: 800; margin-right: 6px; }
-.mini-photo { position: relative; border-radius: 12px; overflow: hidden; line-height: 0; }
-.mini-photo svg { width: 100%; height: auto; display: block; }
+.mini-photo { position: relative; border-radius: 12px; overflow: hidden; line-height: 0; aspect-ratio: 32 / 11; }
+.mini-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .float-badge {
   position: absolute; z-index: 2;
   display: inline-flex; align-items: center; gap: 6px;
@@ -340,9 +340,11 @@ p { margin: 0 0 14px; }
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 .photo-card:hover { transform: translateY(-6px) rotate(var(--tilt, 0deg)); box-shadow: var(--shadow-lift); }
-.photo-frame { position: relative; line-height: 0; overflow: hidden; }
-.photo-frame svg { width: 100%; height: auto; display: block; transition: transform 0.4s ease; }
-.photo-card:hover .photo-frame svg { transform: scale(1.04); }
+.photo-card:active { transform: scale(0.98) rotate(var(--tilt, 0deg)); }
+.photo-frame { position: relative; line-height: 0; overflow: hidden; aspect-ratio: 16 / 10; cursor: zoom-in; }
+.photo-frame img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s ease; }
+.photo-card:hover .photo-frame img { transform: scale(1.04); }
+.photo-frame:focus-visible { outline: 3px solid var(--coral); outline-offset: 2px; }
 .photo-badge {
   position: absolute; left: 10px; bottom: 10px;
   background: rgba(27, 36, 71, 0.92); color: #fff;
@@ -651,6 +653,48 @@ details p { margin: 10px 0 0; color: var(--muted); font-size: 0.95rem; }
 .footer-nav { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 0 0 14px; }
 .footer-nav a { color: #fff; font-weight: 700; text-decoration: none; border-bottom: 2px solid transparent; transition: border-color 0.2s ease; }
 .footer-nav a:hover { border-bottom-color: var(--turq-bright); }
+
+/* ---------- Visionneuse photo ---------- */
+.lightbox {
+  display: none;
+  position: fixed; inset: 0; z-index: 50;
+  background: rgba(13, 19, 40, 0.92);
+  align-items: center; justify-content: center;
+  padding: 20px;
+}
+.lightbox.open { display: flex; animation: lightbox-in 0.25s ease both; }
+@keyframes lightbox-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.lightbox-img {
+  max-width: min(92vw, 880px); max-height: 78vh;
+  border-radius: 16px; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+  animation: lightbox-zoom 0.25s ease both;
+}
+@keyframes lightbox-zoom {
+  from { transform: scale(0.92); }
+  to { transform: scale(1); }
+}
+.lightbox-caption {
+  position: absolute; left: 0; right: 0; bottom: 22px;
+  text-align: center; color: #fff; font-weight: 700; font-size: 0.98rem;
+  margin: 0; padding: 0 70px;
+}
+.lightbox-close, .lightbox-nav {
+  position: absolute; border: 0; cursor: pointer;
+  background: #fff; color: var(--navy);
+  border-radius: 50%; font-family: inherit; font-weight: 800;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+.lightbox-close:hover, .lightbox-nav:hover { background: var(--turq-bright); }
+.lightbox-close { top: 16px; right: 16px; width: 44px; height: 44px; font-size: 1.2rem; }
+.lightbox-close:hover { transform: scale(1.08); }
+.lightbox-nav { top: 50%; width: 46px; height: 46px; font-size: 1.6rem; line-height: 1; transform: translateY(-50%); }
+.lightbox-nav:hover { transform: translateY(-50%) scale(1.08); }
+.lightbox-prev { left: 12px; }
+.lightbox-next { right: 12px; }
 
 /* ---------- Écrans plus larges ---------- */
 @media (min-width: 640px) {
