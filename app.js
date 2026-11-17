@@ -1,10 +1,44 @@
-/* Vérification immobilière Conakry — interactions du prototype.
+/* Seedee — interactions du site.
    Aucun envoi réseau : tout se passe dans le navigateur. */
 (function () {
   "use strict";
 
+  /* ---------- Révélation au défilement ---------- */
+  var revealEls = document.querySelectorAll(".reveal");
+  if ("IntersectionObserver" in window) {
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    revealEls.forEach(function (el) { observer.observe(el); });
+  } else {
+    revealEls.forEach(function (el) { el.classList.add("visible"); });
+  }
+
+  /* ---------- Ombre de la barre supérieure au défilement ---------- */
+  var topbar = document.getElementById("topbar");
+  function onScroll() {
+    if (topbar) topbar.classList.toggle("scrolled", window.scrollY > 8);
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
   /* ---------- Onglets du rapport d'exemple ---------- */
   var tabs = document.querySelectorAll(".tab");
+  var reportTerrain = document.getElementById("report-terrain");
+  var reportChantier = document.getElementById("report-chantier");
+  var budgetFill = document.getElementById("budget-fill");
+
+  function animateBudget() {
+    if (!budgetFill) return;
+    budgetFill.style.width = "0%";
+    setTimeout(function () { budgetFill.style.width = "41%"; }, 120);
+  }
+
   tabs.forEach(function (tab) {
     tab.addEventListener("click", function () {
       tabs.forEach(function (t) {
@@ -13,8 +47,10 @@
       });
       tab.classList.add("active");
       tab.setAttribute("aria-selected", "true");
-      document.getElementById("report-terrain").classList.toggle("hidden", tab.dataset.tab !== "terrain");
-      document.getElementById("report-chantier").classList.toggle("hidden", tab.dataset.tab !== "chantier");
+      var showChantier = tab.dataset.tab === "chantier";
+      if (reportTerrain) reportTerrain.classList.toggle("hidden", showChantier);
+      if (reportChantier) reportChantier.classList.toggle("hidden", !showChantier);
+      if (showChantier) animateBudget();
     });
   });
 
@@ -65,6 +101,9 @@
       html += "<p>— " + line + "</p>";
     });
     detailBox.innerHTML = html;
+    detailBox.classList.remove("swap");
+    void detailBox.offsetWidth; /* relance l'animation */
+    detailBox.classList.add("swap");
     milestoneBtns.forEach(function (btn) {
       btn.classList.toggle("active", btn.dataset.milestone === key);
     });
@@ -76,6 +115,43 @@
     });
   });
   showMilestone("elevation");
+
+  /* ---------- Cartes « Pourquoi Seedee ? » (accordéon) ---------- */
+  var whyCards = document.querySelectorAll(".why-card");
+  whyCards.forEach(function (card) {
+    var head = card.querySelector(".why-head");
+    if (!head) return;
+    head.addEventListener("click", function () {
+      var isOpen = card.classList.contains("open");
+      whyCards.forEach(function (other) {
+        other.classList.remove("open");
+        var otherHead = other.querySelector(".why-head");
+        if (otherHead) otherHead.setAttribute("aria-expanded", "false");
+      });
+      if (!isOpen) {
+        card.classList.add("open");
+        head.setAttribute("aria-expanded", "true");
+      }
+    });
+  });
+
+  /* ---------- Comparaison « Sans / Avec Seedee » ---------- */
+  var compareBtns = document.querySelectorAll(".compare-btn");
+  var panelSans = document.getElementById("compare-sans");
+  var panelAvec = document.getElementById("compare-avec");
+  compareBtns.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      compareBtns.forEach(function (b) {
+        b.classList.remove("active");
+        b.setAttribute("aria-selected", "false");
+      });
+      btn.classList.add("active");
+      btn.setAttribute("aria-selected", "true");
+      var showAvec = btn.dataset.compare === "avec";
+      if (panelSans) panelSans.classList.toggle("hidden", showAvec);
+      if (panelAvec) panelAvec.classList.toggle("hidden", !showAvec);
+    });
+  });
 
   /* ---------- Formulaire : estimation en direct ---------- */
   var form = document.getElementById("mission-form");
@@ -139,7 +215,7 @@
       "— Quartier : " + quartier + "\n" +
       (budget ? "— Budget du bien : " + budget + " $\n" : "") +
       "— Besoin : " + description + "\n" +
-      "(Demande envoyée depuis le site Vérification immobilière Conakry.)";
+      "(Demande envoyée depuis le site Seedee.)";
 
     function done() {
       copyStatus.textContent = "Brief copié ! Collez-le dans WhatsApp.";

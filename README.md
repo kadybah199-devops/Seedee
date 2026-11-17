@@ -1,7 +1,8 @@
-# Vérification immobilière Conakry
+# Seedee
 
-Site vitrine du service de vérification immobilière à Conakry pour la
-diaspora guinéenne : **vérifier avant de payer, prouver après avoir payé**.
+Site vitrine de **Seedee**, le service de vérification immobilière à
+Conakry pour la diaspora guinéenne : **vérifier avant de payer,
+prouver après avoir payé**.
 
 Un vérificateur de confiance se déplace sur place (terrain, maison,
 chantier), prend des photos horodatées et géolocalisées, et envoie un
@@ -14,15 +15,16 @@ Guinée : léger, mobile d'abord, aucune ressource externe
 (polices système, illustrations SVG intégrées).
 
 - `index.html` — contenu complet du site, en français
-- `styles.css` — styles, mobile d'abord
+- `styles.css` — styles, mobile d'abord, couleurs vives et animations
 - `app.js` — interactions : rapport d'exemple (onglets, jalons
-  cliquables), estimation en direct du formulaire, copie du brief
-  WhatsApp
+  cliquables), cartes « Pourquoi Seedee ? », comparaison
+  Sans / Avec Seedee, révélation au défilement, estimation en direct
+  du formulaire, copie du brief WhatsApp
 
 ## Déploiement
 
-Hébergé sur Vercel, déployé depuis ce dépôt. Aucune variable
-d'environnement requise.
+Hébergé sur Vercel (projet `seedee`), déployé depuis ce dépôt à
+chaque poussée sur `main`. Aucune variable d'environnement requise.
 
 ## Statut
 
