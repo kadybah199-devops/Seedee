@@ -1,5 +1,7 @@
 /* Seedee — interactions du site.
-   Aucun envoi réseau : tout se passe dans le navigateur. */
+   Le site n'envoie aucune donnée tout seul : tout se passe dans le
+   navigateur. WhatsApp ne s'ouvre que si le visiteur clique sur
+   « Envoyer sur WhatsApp ». */
 (function () {
   "use strict";
 
@@ -195,18 +197,20 @@
   form.addEventListener("input", updateEstimate);
   updateEstimate();
 
-  /* ---------- Copier le brief WhatsApp ---------- */
+  /* ---------- Envoyer le brief sur WhatsApp ---------- */
+  var WHATSAPP_NUMBER = "224620685645"; /* +224 620 68 56 45, vérificateur à Conakry */
+  var sendBtn = document.getElementById("send-whatsapp");
   var copyBtn = document.getElementById("copy-brief");
   var copyStatus = document.getElementById("copy-status");
 
-  copyBtn.addEventListener("click", function () {
+  function buildBrief() {
     var type = selectedValue("type");
     var mission = selectedValue("mission");
     var quartier = document.getElementById("quartier").value.trim() || "Non précisé";
     var budget = document.getElementById("budget").value.trim();
     var description = document.getElementById("description").value.trim() || "Non précisée";
 
-    var brief =
+    return (
       "Bonjour, je demande une " + mission.toLowerCase() + " pour un" +
       (type === "Maison" ? "e maison" : " terrain") +
       " à Conakry.\n" +
@@ -215,7 +219,18 @@
       "— Quartier : " + quartier + "\n" +
       (budget ? "— Budget du bien : " + budget + " $\n" : "") +
       "— Besoin : " + description + "\n" +
-      "(Demande envoyée depuis le site Seedee.)";
+      "(Demande envoyée depuis le site Seedee.)"
+    );
+  }
+
+  sendBtn.addEventListener("click", function () {
+    var url = "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(buildBrief());
+    window.open(url, "_blank", "noopener");
+    copyStatus.textContent = "WhatsApp s'ouvre avec votre message déjà rempli.";
+  });
+
+  copyBtn.addEventListener("click", function () {
+    var brief = buildBrief();
 
     function done() {
       copyStatus.textContent = "Brief copié ! Collez-le dans WhatsApp.";
