@@ -20,7 +20,7 @@ Guinée : léger, mobile d'abord, aucune ressource externe
 - `styles.css` — styles, mobile d'abord, couleurs vives et animations ;
   chaque section a son propre fond dessiné (dégradés, motifs, halos),
   jamais de texte sur fond uni
-- `app.js` — interactions : rapport d'exemple (onglets, jalons
+- `app.js` — interactions : rapport (onglets, jalons
   cliquables), cartes « Pourquoi Seedee ? », comparaison
   Sans / Avec Seedee, révélation au défilement, estimation en direct
   du formulaire, copie du brief WhatsApp
@@ -32,5 +32,5 @@ chaque poussée sur `main`. Aucune variable d'environnement requise.
 
 ## Statut
 
-Projet en cours de validation. Les tarifs affichés sur le site sont
-des exemples à valider avec les premiers clients.
+Site en ligne sur https://seedee.vercel.app. Les tarifs affichés
+sont les tarifs du service.

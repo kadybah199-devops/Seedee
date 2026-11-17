@@ -27,7 +27,7 @@
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
 
-  /* ---------- Onglets du rapport d'exemple ---------- */
+  /* ---------- Onglets du rapport ---------- */
   var tabs = document.querySelectorAll(".tab");
   var reportTerrain = document.getElementById("report-terrain");
   var reportChantier = document.getElementById("report-chantier");
@@ -54,7 +54,7 @@
     });
   });
 
-  /* ---------- Jalons du chantier d'exemple ---------- */
+  /* ---------- Jalons du chantier ---------- */
   var milestoneData = {
     fondation: {
       title: "Fondation — terminé le 28 oct. 2026",
@@ -178,12 +178,12 @@
       unit = "vérification avant achat";
     }
 
-    var html = "<strong>Estimation (exemple) : " + price + "</strong> pour une " + unit +
+    var html = "<strong>Estimation : " + price + "</strong> pour une " + unit +
       " d'un" + (type === "Maison" ? "e maison" : " terrain");
     if (quartier) html += " à " + escapeHtml(quartier);
     html += ".";
     if (budget) html += " Budget du bien : " + escapeHtml(budget) + " $.";
-    html += "<br><span>Tarif d'exemple, en cours de validation. Le tarif exact est confirmé après analyse de votre demande.</span>";
+    html += "<br><span>Tarif confirmé après analyse de votre demande.</span>";
     estimateBox.innerHTML = html;
   }
 
