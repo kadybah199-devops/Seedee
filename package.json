@@ -1,0 +1,1 @@
+{"dependencies":{"@vercel/blob":"^2.9.0"},"description":"Seedee — vérification immobilière à Conakry. Site statique + fonctions serverless Vercel pour enregistrer les demandes.","name":"seedee","private":true,"type":"module","version":"1.0.0"}

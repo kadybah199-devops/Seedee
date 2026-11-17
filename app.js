@@ -1,7 +1,9 @@
 /* Seedee — interactions du site.
-   Le site n'envoie aucune donnée tout seul : tout se passe dans le
-   navigateur. WhatsApp ne s'ouvre que si le visiteur clique sur
-   « Envoyer sur WhatsApp ». */
+   Quand le visiteur clique sur « Envoyer sur WhatsApp », sa demande
+   est aussi enregistrée (nom, téléphone, bien, mission) pour que
+   Seedee puisse la retrouver sur sa page privée. Rien ne s'envoie
+   sans ce clic, et un échec d'enregistrement n'empêche jamais
+   WhatsApp de s'ouvrir. */
 (function () {
   "use strict";
 
@@ -206,6 +208,8 @@
   function buildBrief() {
     var type = selectedValue("type");
     var mission = selectedValue("mission");
+    var nom = document.getElementById("nom").value.trim() || "Non précisé";
+    var telephone = document.getElementById("telephone").value.trim() || "Non précisé";
     var quartier = document.getElementById("quartier").value.trim() || "Non précisé";
     var budget = document.getElementById("budget").value.trim();
     var description = document.getElementById("description").value.trim() || "Non précisée";
@@ -214,6 +218,8 @@
       "Bonjour, je demande une " + mission.toLowerCase() + " pour un" +
       (type === "Maison" ? "e maison" : " terrain") +
       " à Conakry.\n" +
+      "— Nom : " + nom + "\n" +
+      "— Téléphone : " + telephone + "\n" +
       "— Bien : " + type + "\n" +
       "— Mission : " + mission + "\n" +
       "— Quartier : " + quartier + "\n" +
@@ -223,7 +229,44 @@
     );
   }
 
+  /* Enregistre la demande pour la page privée des demandes.
+     Envoi « fire-and-forget » : un échec n'empêche jamais WhatsApp
+     de s'ouvrir. */
+  function saveDemande() {
+    if (!window.fetch) return;
+    var payload = {
+      nom: document.getElementById("nom").value.trim(),
+      telephone: document.getElementById("telephone").value.trim(),
+      type_bien: selectedValue("type"),
+      mission: selectedValue("mission"),
+      quartier: document.getElementById("quartier").value.trim(),
+      budget: document.getElementById("budget").value.trim(),
+      description: document.getElementById("description").value.trim()
+    };
+    try {
+      fetch("/api/demande", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+        keepalive: true
+      }).catch(function () { /* l'échec n'empêche pas WhatsApp */ });
+    } catch (e) { /* idem */ }
+  }
+
   sendBtn.addEventListener("click", function () {
+    var nomEl = document.getElementById("nom");
+    var telEl = document.getElementById("telephone");
+    if (!nomEl.value.trim()) {
+      copyStatus.textContent = "Merci d'indiquer votre nom.";
+      nomEl.focus();
+      return;
+    }
+    if (!telEl.value.trim()) {
+      copyStatus.textContent = "Merci d'indiquer votre numéro WhatsApp / téléphone.";
+      telEl.focus();
+      return;
+    }
+    saveDemande();
     var url = "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(buildBrief());
     window.open(url, "_blank", "noopener");
     copyStatus.textContent = "WhatsApp s'ouvre avec votre message déjà rempli.";

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Seedee — Demandes reçues (privé)</title>
+<meta name="description" content="Page privée Seedee : liste des demandes de vérification reçues depuis le site.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231b2447'/%3E%3Cpath d='M32 12 L54 30 H48 V52 H16 V30 H10 Z' fill='%23ffffff'/%3E%3Cpath d='M32 11 L55 30 H48 L32 17 L16 30 H9 Z' fill='%232dd4bf'/%3E%3Cpath d='M23 41 L29 47 L42 32' fill='none' stroke='%23ff5d5d' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .admin { padding: 2.5rem 0 4rem; background: linear-gradient(180deg, #f6f3ec, #eef4ff); min-height: 70vh; }
+  .admin h1 { font-size: 2rem; color: #1b2447; margin: 0 0 .4rem; }
+  .admin .section-sub { color: #4a5268; margin: 0 0 1.6rem; }
+  .code-box { background: #fff; border-radius: 16px; padding: 1.4rem; box-shadow: 0 10px 30px rgba(27, 36, 71, .12); transform: rotate(-.6deg); }
+  .list-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin: 0 0 1rem; }
+  .list-head p { margin: 0; color: #4a5268; font-weight: 700; }
+  .demande-card { background: #fff; border-radius: 16px; padding: 1.2rem 1.3rem; margin: 0 0 1rem; box-shadow: 0 8px 24px rgba(27, 36, 71, .10); border-top: 4px solid #2dd4bf; }
+  .demande-card:nth-child(3n+2) { border-top-color: #ff5d5d; }
+  .demande-card:nth-child(3n) { border-top-color: #3b4cc0; }
+  .demande-head { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+  .demande-head strong { font-size: 1.1rem; color: #1b2447; }
+  .demande-date { color: #6b7280; font-size: .9rem; }
+  .demande-line { margin: .35rem 0; color: #2b3245; }
+  .demande-line a { color: #0f766e; font-weight: 700; }
+  .demande-desc { margin: .6rem 0 0; color: #4a5268; white-space: pre-wrap; }
+  .demande-foot { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-top: .9rem; }
+  .statut { background: #e0f7f3; color: #0f766e; border-radius: 999px; padding: .2rem .7rem; font-size: .85rem; font-weight: 700; }
+  .btn-del { background: none; border: 0; color: #c22f2f; cursor: pointer; font-size: .9rem; text-decoration: underline; padding: .2rem 0; }
+</style>
+</head>
+<body>
+
+<!-- Logo Seedee : maison + coche (confiance + immobilier) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="seedee-grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1b2447"/>
+      <stop offset="1" stop-color="#3b4cc0"/>
+    </linearGradient>
+    <symbol id="logo-seedee" viewBox="0 0 64 64">
+      <rect width="64" height="64" rx="16" fill="url(#seedee-grad)"/>
+      <path d="M32 12 L54 30 H48 V52 H16 V30 H10 Z" fill="#ffffff"/>
+      <path d="M32 11 L55 30 H48 L32 17 L16 30 H9 Z" fill="#2dd4bf"/>
+      <path d="M23 41 L29 47 L42 32" fill="none" stroke="#ff5d5d" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<header class="topbar" id="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="/" aria-label="Seedee — accueil">
+      <svg class="logo-img" aria-hidden="true"><use href="#logo-seedee"/></svg>
+      <span class="brand-name">Seedee
+        <span class="brand-tag">Demandes reçues · page privée</span>
+      </span>
+    </a>
+  </div>
+</header>
+
+<main class="admin">
+  <div class="wrap narrow">
+    <h1>Demandes reçues</h1>
+    <p class="section-sub">Les personnes qui ont demandé une vérification depuis le site.</p>
+
+    <div id="code-gate" class="code-box">
+      <label class="field">Code d'accès
+        <input type="password" id="admin-code" inputmode="numeric" autocomplete="off" placeholder="Code à 6 chiffres">
+      </label>
+      <button type="button" class="btn btn-coral" id="unlock">Voir les demandes</button>
+      <p class="form-note" id="code-status" role="status"></p>
+    </div>
+
+    <div id="list-zone" class="hidden">
+      <div class="list-head">
+        <p id="list-count"></p>
+        <button type="button" class="btn btn-small btn-ghost" id="refresh">Actualiser</button>
+      </div>
+      <div id="demandes-list"></div>
+      <p class="form-note" id="list-status" role="status"></p>
+    </div>
+  </div>
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  var codeGate = document.getElementById("code-gate");
+  var listZone = document.getElementById("list-zone");
+  var codeInput = document.getElementById("admin-code");
+  var codeStatus = document.getElementById("code-status");
+  var listEl = document.getElementById("demandes-list");
+  var listCount = document.getElementById("list-count");
+  var listStatus = document.getElementById("list-status");
+  var code = sessionStorage.getItem("seedee-admin-code") || "";
+
+  function escapeHtml(text) {
+    return String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  function fmtDate(iso) {
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return "";
+    return d.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" });
+  }
+
+  function waLink(tel) {
+    var digits = String(tel || "").replace(/\D/g, "");
+    return digits ? "https://wa.me/" + digits : "";
+  }
+
+  function cardHtml(d) {
+    var tel = d.telephone || "";
+    var link = waLink(tel);
+    var html = '<article class="demande-card">';
+    html += '<div class="demande-head"><strong>' + escapeHtml(d.nom || "Sans nom") + '</strong>';
+    html += '<span class="demande-date">' + escapeHtml(fmtDate(d.created_at)) + '</span></div>';
+    html += '<p class="demande-line">Tél. : ' + (link ? '<a href="' + link + '" target="_blank" rel="noopener">' + escapeHtml(tel) + '</a>' : escapeHtml(tel)) + '</p>';
+    html += '<p class="demande-line"><strong>' + escapeHtml(d.mission || "") + '</strong> — ' + escapeHtml(d.type_bien || "") + '</p>';
+    if (d.quartier) html += '<p class="demande-line">Quartier : ' + escapeHtml(d.quartier) + '</p>';
+    if (d.budget) html += '<p class="demande-line">Budget du bien : ' + escapeHtml(d.budget) + ' $</p>';
+    if (d.description) html += '<p class="demande-desc">' + escapeHtml(d.description) + '</p>';
+    html += '<div class="demande-foot"><span class="statut">' + escapeHtml(d.statut || "nouvelle") + '</span>';
+    if (d._pathname) html += '<button type="button" class="btn-del" data-delete="' + escapeHtml(d._pathname) + '">Supprimer</button>';
+    html += '</div></article>';
+    return html;
+  }
+
+  function loadList() {
+    listStatus.textContent = "Chargement…";
+    fetch("/api/demandes", { headers: { "x-admin-code": code } })
+      .then(function (r) {
+        if (r.status === 401) throw new Error("code");
+        if (!r.ok) throw new Error("load");
+        return r.json();
+      })
+      .then(function (data) {
+        var items = data.demandes || [];
+        listCount.textContent = items.length === 0 ? "" : items.length + (items.length > 1 ? " demandes" : " demande");
+        if (items.length === 0) {
+          listEl.innerHTML = "";
+          listStatus.textContent = "Aucune demande pour le moment.";
+          return;
+        }
+        listStatus.textContent = "";
+        listEl.innerHTML = items.map(cardHtml).join("");
+      })
+      .catch(function (e) {
+        if (e.message === "code") {
+          sessionStorage.removeItem("seedee-admin-code");
+          listZone.classList.add("hidden");
+          codeGate.classList.remove("hidden");
+          codeStatus.textContent = "Code incorrect.";
+        } else {
+          listStatus.textContent = "Impossible de charger les demandes. Réessayez.";
+        }
+      });
+  }
+
+  function unlock() {
+    code = codeInput.value.trim();
+    if (!code) {
+      codeStatus.textContent = "Entrez le code d'accès.";
+      return;
+    }
+    codeStatus.textContent = "";
+    sessionStorage.setItem("seedee-admin-code", code);
+    codeGate.classList.add("hidden");
+    listZone.classList.remove("hidden");
+    loadList();
+  }
+
+  document.getElementById("unlock").addEventListener("click", unlock);
+  codeInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") unlock();
+  });
+  document.getElementById("refresh").addEventListener("click", loadList);
+
+  listEl.addEventListener("click", function (e) {
+    var btn = e.target.closest("[data-delete]");
+    if (!btn) return;
+    var id = btn.getAttribute("data-delete");
+    if (!window.confirm("Supprimer cette demande ?")) return;
+    fetch("/api/demandes?id=" + encodeURIComponent(id), {
+      method: "DELETE",
+      headers: { "x-admin-code": code }
+    })
+      .then(function (r) {
+        if (!r.ok) throw new Error("del");
+        loadList();
+      })
+      .catch(function () {
+        listStatus.textContent = "Suppression impossible. Réessayez.";
+      });
+  });
+
+  if (code) {
+    codeGate.classList.add("hidden");
+    listZone.classList.remove("hidden");
+    loadList();
+  }
+})();
+</script>
+
+</body>
+</html>
