@@ -19,7 +19,9 @@ demandes et les listent sur une page privée.
 
 - `index.html` — contenu complet du site, en français, avec le logo
   Seedee (maison + coche, SVG intégré réutilisé dans l'en-tête, le
-  hero, le pied de page et le favicon)
+  hero, le pied de page et le favicon), et la section « Le groupe
+  Seedee » (communauté WhatsApp de la diaspora : la demande pour
+  rejoindre le groupe part vers le numéro Seedee)
 - `styles.css` — styles, mobile d'abord, couleurs vives et animations ;
   chaque section a son propre fond dessiné (dégradés, motifs, halos),
   jamais de texte sur fond uni

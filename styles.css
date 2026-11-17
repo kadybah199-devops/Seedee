@@ -179,10 +179,11 @@ p { margin: 0 0 14px; }
 }
 .section-lilac { background: linear-gradient(180deg, #e6e9ff 0%, #d8defc 100%); }
 .section-blush { background: linear-gradient(180deg, #ffe9df 0%, #ffd9c7 100%); }
+.section-indigo { background: linear-gradient(135deg, #232c5e 0%, var(--indigo) 55%, var(--indigo-bright) 100%); }
 
 /* Titres et sous-titres sur fonds sombres ou vifs */
-.section-dark h2, .section-coral h2 { color: #fff; }
-.section-dark .section-sub { color: #d5dcff; }
+.section-dark h2, .section-coral h2, .section-indigo h2 { color: #fff; }
+.section-dark .section-sub, .section-indigo .section-sub { color: #d5dcff; }
 .section-coral .section-sub { color: rgba(255, 255, 255, 0.95); }
 
 /* Motifs décoratifs (pointillés, rayures, halo) */
@@ -724,6 +725,26 @@ details p { margin: 10px 0 0; color: var(--muted); font-size: 0.95rem; }
   .hero-grid { grid-template-columns: 1.15fr 0.85fr; align-items: center; gap: 44px; }
   .hero-visual { margin-top: 8px; }
 }
+
+/* ---------- Groupe Seedee ---------- */
+.group-list {
+  list-style: none; margin: 26px 0 0; padding: 4px 0;
+  background: var(--card); border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.group-list li { display: flex; gap: 14px; align-items: flex-start; padding: 16px 20px; }
+.group-list li + li { border-top: 1px solid var(--line); }
+.group-list p { margin: 0; }
+.group-icon {
+  flex: 0 0 auto; width: 42px; height: 42px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--turq-soft); color: var(--turq);
+}
+.group-icon svg { width: 22px; height: 22px; }
+.group-icon.icon-coral { background: var(--coral-soft); color: var(--coral-dark); }
+.group-icon.icon-indigo { background: var(--indigo-soft); color: var(--indigo); }
+.group-cta { text-align: center; margin-top: 28px; }
+.group-note { margin: 14px 0 0; font-size: 0.9rem; color: #d5dcff; }
 
 /* ---------- Petits écrans : moins d'inclinaison ---------- */
 @media (max-width: 639px) {
