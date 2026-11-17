@@ -244,6 +244,163 @@
     else if (e.key === "ArrowRight") showLightboxPhoto(lightboxIndex + 1);
   });
 
+  /* ---------- Carrousel photos ---------- */
+  var carousel = document.getElementById("photo-carousel");
+  var track = document.getElementById("carousel-track");
+  if (carousel && track) {
+    var slides = track.querySelectorAll(".photo-card");
+    var dotsBox = document.getElementById("carousel-dots");
+    var prevBtn = document.getElementById("carousel-prev");
+    var nextBtn = document.getElementById("carousel-next");
+    var current = 0;
+    var timer = null;
+    var carouselVisible = true;
+    var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var dots = [];
+
+    slides.forEach(function (_, i) {
+      var dot = document.createElement("button");
+      dot.className = "carousel-dot";
+      dot.type = "button";
+      dot.setAttribute("aria-label", "Photo " + (i + 1));
+      dot.addEventListener("click", function () { goTo(i); restartAuto(); });
+      dotsBox.appendChild(dot);
+      dots.push(dot);
+    });
+
+    function goTo(i) {
+      current = (i + slides.length) % slides.length;
+      track.style.transform = "translateX(-" + (current * 100) + "%)";
+      dots.forEach(function (d, j) { d.classList.toggle("active", j === current); });
+      slides.forEach(function (slide, j) {
+        slide.setAttribute("aria-hidden", j === current ? "false" : "true");
+        var frame = slide.querySelector(".photo-frame");
+        if (frame) frame.setAttribute("tabindex", j === current ? "0" : "-1");
+      });
+    }
+    function nextSlide() { goTo(current + 1); }
+    function prevSlide() { goTo(current - 1); }
+    function startAuto() {
+      if (reduceMotion || timer) return;
+      timer = setInterval(function () { if (carouselVisible) nextSlide(); }, 4500);
+    }
+    function stopAuto() {
+      if (timer) { clearInterval(timer); timer = null; }
+    }
+    function restartAuto() { stopAuto(); startAuto(); }
+
+    if (prevBtn) prevBtn.addEventListener("click", function () { prevSlide(); restartAuto(); });
+    if (nextBtn) nextBtn.addEventListener("click", function () { nextSlide(); restartAuto(); });
+
+    carousel.addEventListener("mouseenter", stopAuto);
+    carousel.addEventListener("mouseleave", startAuto);
+
+    var touchX = null;
+    var justSwiped = false;
+    carousel.addEventListener("touchstart", function (e) {
+      stopAuto();
+      touchX = e.changedTouches[0].clientX;
+    }, { passive: true });
+    carousel.addEventListener("touchend", function (e) {
+      if (touchX === null) { startAuto(); return; }
+      var dx = e.changedTouches[0].clientX - touchX;
+      if (Math.abs(dx) > 40) {
+        justSwiped = true;
+        if (dx < 0) nextSlide(); else prevSlide();
+      }
+      touchX = null;
+      restartAuto();
+    }, { passive: true });
+    /* Un balayage ne doit pas ouvrir la visionneuse */
+    carousel.addEventListener("click", function (e) {
+      if (justSwiped) { e.preventDefault(); e.stopPropagation(); justSwiped = false; }
+    }, true);
+
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (entries) {
+        carouselVisible = entries[0].isIntersecting;
+      }, { threshold: 0.3 }).observe(carousel);
+    }
+
+    goTo(0);
+    startAuto();
+  }
+
+  /* ---------- Quiz : votre achat est-il risqué ? ---------- */
+  var quizStep = document.getElementById("quiz-step");
+  var quizProgress = document.getElementById("quiz-progress");
+  var quizFill = document.getElementById("quiz-fill");
+  if (quizStep && quizProgress && quizFill) {
+    var quizQuestions = [
+      { q: "Le vendeur est-il un proche ou quelqu'un que vous connaissez bien ?",
+        answers: [{ t: "Oui", pts: 0 }, { t: "Non", pts: 1 }, { t: "Je ne sais pas", pts: 1 }] },
+      { q: "Avez-vous vu le titre foncier original ?",
+        answers: [{ t: "Oui", pts: 0 }, { t: "Non", pts: 1 }, { t: "Pas encore", pts: 1 }] },
+      { q: "Le terrain est-il borné aux 4 coins ?",
+        answers: [{ t: "Oui", pts: 0 }, { t: "Non", pts: 1 }, { t: "Je ne sais pas", pts: 1 }] },
+      { q: "Avez-vous déjà visité le terrain ou la maison vous-même ?",
+        answers: [{ t: "Oui", pts: 0 }, { t: "Non", pts: 1 }] }
+    ];
+    var quizIndex = 0;
+    var quizScore = 0;
+
+    function showQuestion(i) {
+      var item = quizQuestions[i];
+      quizProgress.textContent = "Question " + (i + 1) + " sur " + quizQuestions.length;
+      quizFill.style.width = ((i / quizQuestions.length) * 100) + "%";
+      var html = '<p class="quiz-q">' + item.q + '</p><div class="quiz-answers">';
+      item.answers.forEach(function (a) {
+        html += '<button type="button" class="btn btn-quiz" data-pts="' + a.pts + '">' + a.t + '</button>';
+      });
+      html += '</div>';
+      quizStep.innerHTML = html;
+      quizStep.classList.remove("swap");
+      void quizStep.offsetWidth; /* relance l'animation */
+      quizStep.classList.add("swap");
+      quizStep.querySelectorAll(".btn-quiz").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          quizScore += parseInt(btn.getAttribute("data-pts"), 10);
+          quizIndex++;
+          if (quizIndex < quizQuestions.length) showQuestion(quizIndex);
+          else showResult();
+        });
+      });
+    }
+
+    function showResult() {
+      quizProgress.textContent = "Votre résultat";
+      quizFill.style.width = "100%";
+      var level, cls, text;
+      if (quizScore <= 1) {
+        level = "Risque faible"; cls = "risk-low";
+        text = "Votre achat semble plutôt sûr, mais une vérification reste une bonne assurance avant de payer.";
+      } else if (quizScore === 2) {
+        level = "Risque moyen"; cls = "risk-mid";
+        text = "Quelques points à éclaircir avant de payer — une vérification vous donnerait les réponses.";
+      } else {
+        level = "Risque élevé"; cls = "risk-high";
+        text = "Attention, plusieurs signaux d'alerte — ne payez rien avant une vérification.";
+      }
+      quizStep.innerHTML =
+        '<div class="quiz-result ' + cls + '">' +
+          '<p class="quiz-level">' + level + ' — ' + quizScore + ' point' + (quizScore > 1 ? 's' : '') + ' sur 4</p>' +
+          '<p>' + text + '</p>' +
+          '<div class="quiz-actions">' +
+            '<a class="btn btn-coral" href="#demande">Demander une vérification</a>' +
+            '<button type="button" class="btn btn-ghost" id="quiz-restart">Recommencer le test</button>' +
+          '</div>' +
+        '</div>';
+      quizStep.classList.remove("swap");
+      void quizStep.offsetWidth;
+      quizStep.classList.add("swap");
+      document.getElementById("quiz-restart").addEventListener("click", function () {
+        quizIndex = 0; quizScore = 0; showQuestion(0);
+      });
+    }
+
+    showQuestion(0);
+  }
+
   /* ---------- Formulaire : estimation en direct ---------- */
   var form = document.getElementById("mission-form");
   var estimateBox = document.getElementById("estimate");

@@ -26,8 +26,11 @@ demandes et les listent sur une page privée.
   chaque section a son propre fond dessiné (dégradés, motifs, halos),
   jamais de texte sur fond uni
 - `app.js` — interactions : rapport (onglets, jalons
-  cliquables), visionneuse photo (toucher une photo pour
-  l'agrandir, flèches pour naviguer), cartes
+  cliquables), carrousel photos (défilement automatique,
+  flèches, points, balayage tactile), visionneuse photo
+  (toucher une photo pour l'agrandir, flèches pour naviguer),
+  quiz « Votre achat est-il risqué ? » (4 questions, score
+  de risque, résultat avec appel à la vérification), cartes
   « Pourquoi Seedee ? », comparaison Sans / Avec Seedee,
   révélation au défilement, estimation en direct
   du formulaire, envoi du brief WhatsApp (la demande est aussi
