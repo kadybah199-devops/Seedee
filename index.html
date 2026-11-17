@@ -5,19 +5,42 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Seedee — Vérifier avant de payer | Immobilier à Conakry</title>
 <meta name="description" content="Seedee : vous investissez dans un terrain ou une maison à Conakry, depuis l'étranger. Un vérificateur de confiance se déplace, photographie, et vous envoie un rapport clair. Vérifier avant de payer, prouver après avoir payé.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23054d2c'/%3E%3Cpath d='M32 12 L54 30 H48 V52 H16 V30 H10 Z' fill='%23ffffff'/%3E%3Cpath d='M32 11 L55 30 H48 L32 17 L16 30 H9 Z' fill='%23ffc531'/%3E%3Cpath d='M23 41 L29 47 L42 32' fill='none' stroke='%23ff6b1a' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="styles.css">
 <script src="app.js" defer></script>
 </head>
 <body>
 
+<!-- Logo Seedee : maison + coche (confiance + immobilier), réutilisé partout -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="seedee-grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#054d2c"/>
+      <stop offset="1" stop-color="#12b76a"/>
+    </linearGradient>
+    <symbol id="logo-seedee" viewBox="0 0 64 64">
+      <rect width="64" height="64" rx="16" fill="url(#seedee-grad)"/>
+      <path d="M32 12 L54 30 H48 V52 H16 V30 H10 Z" fill="#ffffff"/>
+      <path d="M32 11 L55 30 H48 L32 17 L16 30 H9 Z" fill="#ffc531"/>
+      <path d="M23 41 L29 47 L42 32" fill="none" stroke="#ff6b1a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+  </defs>
+</svg>
+
 <header class="topbar" id="topbar">
   <div class="wrap topbar-in">
-    <a class="brand" href="#top">
-      <span class="brand-mark" aria-hidden="true">S</span>
+    <a class="brand" href="#top" aria-label="Seedee — accueil">
+      <svg class="logo-img" aria-hidden="true"><use href="#logo-seedee"/></svg>
       <span class="brand-name">Seedee
         <span class="brand-tag">Vérification immobilière · Conakry</span>
       </span>
     </a>
+    <nav class="topnav" aria-label="Navigation principale">
+      <a href="#missions">Missions</a>
+      <a href="#rapport">Rapport</a>
+      <a href="#tarifs">Tarifs</a>
+      <a href="#faq">Questions</a>
+    </nav>
     <a class="btn btn-small" href="#demande">Demander une vérification</a>
   </div>
 </header>
@@ -27,25 +50,74 @@
   <!-- HERO -->
   <section class="hero">
     <div class="hero-glow" aria-hidden="true"></div>
+    <div class="hero-dots" aria-hidden="true"></div>
     <div class="wrap hero-in">
-      <p class="eyebrow">Seedee — Pour la diaspora guinéenne</p>
-      <h1>Vérifier avant de payer,<br><span class="h1-accent">prouver après avoir payé.</span></h1>
-      <p class="lede">Vous investissez dans un terrain ou une maison à Conakry, depuis l'étranger. Un vérificateur de confiance se déplace, photographie, et vous envoie un rapport clair.</p>
-      <div class="hero-cta">
-        <a class="btn btn-orange" href="#demande">Demander une vérification</a>
-        <a class="btn btn-ghost-light" href="#rapport">Voir un rapport d'exemple</a>
+      <div class="hero-grid">
+        <div class="hero-text">
+          <svg class="hero-logo" aria-hidden="true"><use href="#logo-seedee"/></svg>
+          <p class="eyebrow">Seedee — Pour la diaspora guinéenne</p>
+          <h1>Vérifier avant de payer,<br><span class="h1-accent">prouver après avoir payé.</span></h1>
+          <p class="lede">Vous investissez dans un terrain ou une maison à Conakry, depuis l'étranger. Un vérificateur de confiance se déplace, photographie, et vous envoie un rapport clair.</p>
+          <div class="hero-cta">
+            <a class="btn btn-orange" href="#demande">Demander une vérification</a>
+            <a class="btn btn-ghost-light" href="#rapport">Voir un rapport d'exemple</a>
+          </div>
+          <ul class="hero-pills">
+            <li>✓ Photos horodatées · GPS</li>
+            <li>✓ Rapport en 48 h</li>
+            <li>✓ Vérificateur indépendant</li>
+          </ul>
+        </div>
+        <div class="hero-visual" aria-label="Aperçu d'un rapport Seedee">
+          <div class="mini-report">
+            <div class="mini-report-head">
+              <svg class="logo-img logo-mini" aria-hidden="true"><use href="#logo-seedee"/></svg>
+              <div class="mini-report-title">
+                <strong>Rapport Seedee</strong>
+                <span>Terrain à Sonfonia · 12 nov. 2026</span>
+              </div>
+              <span class="mini-verdict">Prudence</span>
+            </div>
+            <ul class="mini-check">
+              <li><span class="ok">✓</span> Bornage visible aux 4 coins</li>
+              <li><span class="ok">✓</span> Terrain libre, photographié</li>
+              <li><span class="warn">!</span> Titre foncier à confirmer</li>
+            </ul>
+            <div class="mini-photo">
+              <svg viewBox="0 0 320 110" aria-hidden="true">
+                <rect width="320" height="110" fill="#c9f0d8"/>
+                <rect x="30" y="18" width="260" height="74" fill="#fff7e0" stroke="#0a7d4a" stroke-width="3" stroke-dasharray="10 6"/>
+                <circle cx="30" cy="18" r="6" fill="#ff6b1a" stroke="#a83c00" stroke-width="2"/>
+                <circle cx="290" cy="18" r="6" fill="#ff6b1a" stroke="#a83c00" stroke-width="2"/>
+                <circle cx="30" cy="92" r="6" fill="#ff6b1a" stroke="#a83c00" stroke-width="2"/>
+                <circle cx="290" cy="92" r="6" fill="#ff6b1a" stroke="#a83c00" stroke-width="2"/>
+                <text x="160" y="62" text-anchor="middle" font-size="15" fill="#22362a" font-family="sans-serif" font-weight="bold">Terrain — 600 m²</text>
+              </svg>
+              <span class="photo-badge">10h24 · GPS ✓</span>
+            </div>
+          </div>
+          <div class="float-badge float-1">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="9" r="2.5" fill="currentColor"/></svg>
+            Photos GPS ✓
+          </div>
+          <div class="float-badge float-2">79 $ / mission</div>
+        </div>
       </div>
-      <ul class="hero-pills">
-        <li>✓ Photos horodatées · GPS</li>
-        <li>✓ Rapport en 48 h</li>
-        <li>✓ Vérificateur indépendant</li>
-      </ul>
     </div>
+    <svg class="hero-skyline" viewBox="0 0 1200 90" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 90 L0 60 L60 60 L60 45 L120 45 L120 60 L200 60 L200 35 L280 35 L280 55 L340 55 L340 48 L420 48 L420 65 L520 65 L520 40 L600 40 L600 60 L700 60 L700 30 L780 30 L780 55 L880 55 L880 45 L960 45 L960 62 L1040 62 L1040 50 L1120 50 L1120 66 L1200 66 L1200 90 Z" fill="#032d18" opacity="0.55"/>
+      <rect x="220" y="45" width="10" height="10" fill="#ffc531" opacity="0.85"/>
+      <rect x="540" y="50" width="10" height="10" fill="#ffc531" opacity="0.85"/>
+      <rect x="720" y="42" width="10" height="10" fill="#ffc531" opacity="0.85"/>
+      <rect x="900" y="55" width="10" height="10" fill="#ffc531" opacity="0.85"/>
+      <rect x="1060" y="60" width="10" height="10" fill="#ffc531" opacity="0.85"/>
+    </svg>
   </section>
 
   <!-- DÉMO VISUELLE -->
-  <section class="section demo">
+  <section class="section section-peach bg-dots-light">
     <div class="wrap">
+      <p class="kicker kicker-orange reveal">La preuve</p>
       <h2 class="reveal">La preuve, en images</h2>
       <p class="section-sub reveal">Chaque visite produit des photos horodatées et géolocalisées. Voici à quoi ressemble une preuve.</p>
       <div class="photo-grid">
@@ -105,8 +177,9 @@
   </section>
 
   <!-- DEUX MISSIONS -->
-  <section class="section section-green" id="missions">
+  <section class="section section-orange bg-stripes" id="missions">
     <div class="wrap">
+      <p class="kicker kicker-light reveal">Nos missions</p>
       <h2 class="reveal">Deux missions, un même principe</h2>
       <div class="two-col">
         <article class="card card-orange reveal">
@@ -138,8 +211,9 @@
   </section>
 
   <!-- RAPPORT D'EXEMPLE INTERACTIF -->
-  <section class="section" id="rapport">
+  <section class="section section-dark bg-dots-dark" id="rapport">
     <div class="wrap">
+      <p class="kicker kicker-gold reveal">Exemple réel</p>
       <h2 class="reveal">Un exemple de rapport</h2>
       <p class="section-sub reveal">C'est ce que vous recevez après chaque visite. Essayez : changez d'onglet, cliquez sur un jalon.</p>
 
@@ -188,8 +262,9 @@
   </section>
 
   <!-- COMMENT ÇA MARCHE -->
-  <section class="section section-warm" id="fonctionnement">
+  <section class="section section-gold bg-dots-light" id="fonctionnement">
     <div class="wrap">
+      <p class="kicker kicker-dark reveal">En 4 étapes</p>
       <h2 class="reveal">Comment ça marche</h2>
       <ol class="how">
         <li class="reveal"><span class="how-num">1</span><strong>Vous décrivez le bien</strong><br>Terrain ou maison, quartier, et ce que vous voulez vérifier.</li>
@@ -201,9 +276,10 @@
   </section>
 
   <!-- TARIFS -->
-  <section class="section" id="tarifs">
+  <section class="section section-cream bg-glow" id="tarifs">
     <div class="wrap">
-      <h2 class="reveal">Tarifs</h2>
+      <p class="kicker kicker-orange reveal">Tarifs</p>
+      <h2 class="reveal">Des prix simples, sans surprise</h2>
       <p class="section-sub reveal">Tarifs d'exemple, en cours de validation avec les premiers clients.</p>
       <div class="price-grid">
         <article class="price-card reveal">
@@ -227,8 +303,9 @@
   </section>
 
   <!-- DEMANDE DE MISSION -->
-  <section class="section section-green" id="demande">
+  <section class="section section-dark bg-dots-dark" id="demande">
     <div class="wrap">
+      <p class="kicker kicker-gold reveal">Votre mission</p>
       <h2 class="reveal">Demander une vérification</h2>
       <p class="section-sub reveal">Décrivez votre besoin. L'estimation se met à jour en direct, puis copiez le brief pour l'envoyer par WhatsApp.</p>
       <form class="form reveal" id="mission-form" novalidate>
@@ -266,8 +343,9 @@
   </section>
 
   <!-- POURQUOI SEEDEE ? (INTERACTIF) -->
-  <section class="section" id="valeur">
+  <section class="section section-mint bg-dots-light" id="valeur">
     <div class="wrap">
+      <p class="kicker kicker-green reveal">Pourquoi Seedee</p>
       <h2 class="reveal">Pourquoi Seedee ?</h2>
       <p class="section-sub reveal">Touchez une carte pour voir un exemple concret.</p>
 
@@ -343,8 +421,22 @@
         </div>
       </div>
 
-      <h2 class="mt reveal">Qui paie ?</h2>
-      <p class="plain reveal">La diaspora qui investit à distance : c'est elle qui a l'argent et le besoin de confiance. Plus tard, les vendeurs et promoteurs sérieux pourront aussi payer pour faire vérifier leurs biens et rassurer les acheteurs.</p>
+      <div class="info-grid">
+        <article class="info-card info-green reveal">
+          <span class="info-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 20c0-3 2.7-5 6-5s6 2 6 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="17" cy="9" r="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 15c2.8.3 5 2 5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </span>
+          <h3>Qui paie ?</h3>
+          <p>La diaspora qui investit à distance : c'est elle qui a l'argent et le besoin de confiance. Plus tard, les vendeurs et promoteurs sérieux pourront aussi payer pour faire vérifier leurs biens et rassurer les acheteurs.</p>
+        </article>
+        <article class="info-card info-orange reveal d1">
+          <span class="info-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9 20h6M12 16v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M8 9l2.5 2.5L8 14M13 14h3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <h3>Le format</h3>
+          <p>Un <strong>service avec un site web</strong>, d'abord : le site prend les demandes et montre les rapports, une personne de confiance fait les visites. Pas d'application mobile pour l'instant — tout le monde utilise déjà WhatsApp et le navigateur.</p>
+        </article>
+      </div>
 
       <h2 class="mt reveal">Les risques, et comment on les réduit</h2>
       <div class="risk-grid">
@@ -353,16 +445,14 @@
         <article class="risk-card reveal d2"><strong>Terrain difficile</strong><p>On commence petit, avec un vérificateur de confiance et WhatsApp.</p></article>
         <article class="risk-card reveal d3"><strong>Premiers clients à convaincre</strong><p>Chaque première mission est soignée, la réputation se construit mission par mission.</p></article>
       </div>
-
-      <h2 class="mt reveal">Le format</h2>
-      <p class="plain reveal">Un <strong>service avec un site web</strong>, d'abord : le site prend les demandes et montre les rapports, une personne de confiance fait les visites. Pas d'application mobile pour l'instant — tout le monde utilise déjà WhatsApp et le navigateur.</p>
     </div>
   </section>
 
   <!-- FAQ -->
-  <section class="section section-green" id="faq">
+  <section class="section section-sunset bg-dots-light" id="faq">
     <div class="wrap narrow">
-      <h2 class="reveal">Questions fréquentes</h2>
+      <p class="kicker kicker-orange reveal">Questions fréquentes</p>
+      <h2 class="reveal">Vous vous demandez…</h2>
       <details class="reveal">
         <summary>Est-ce que la vérification remplace le notaire ?</summary>
         <p>Non. La vérification constate ce qui est visible sur place : le terrain, les bornes, l'occupation, l'accès. Pour la validité juridique d'un titre foncier, seul le notaire et la conservation foncière font foi. Le rapport vous aide à décider, il ne remplace pas les démarches légales.</p>
@@ -390,8 +480,19 @@
 
 <footer class="footer">
   <div class="wrap">
-    <p class="footer-brand"><span class="brand-mark" aria-hidden="true">S</span> <strong>Seedee</strong> — Vérifier avant de payer, prouver après avoir payé.</p>
-    <p>Projet en cours de validation · Vérification immobilière à Conakry, pour la diaspora guinéenne.</p>
+    <div class="footer-top">
+      <svg class="logo-img logo-footer" aria-hidden="true"><use href="#logo-seedee"/></svg>
+      <div>
+        <p class="footer-brand"><strong>Seedee</strong> — Vérifier avant de payer, prouver après avoir payé.</p>
+        <p>Projet en cours de validation · Vérification immobilière à Conakry, pour la diaspora guinéenne.</p>
+      </div>
+    </div>
+    <nav class="footer-nav" aria-label="Navigation du pied de page">
+      <a href="#missions">Missions</a>
+      <a href="#rapport">Rapport</a>
+      <a href="#tarifs">Tarifs</a>
+      <a href="#demande">Demander une vérification</a>
+    </nav>
     <p>Contact : WhatsApp — à compléter.</p>
   </div>
 </footer>
